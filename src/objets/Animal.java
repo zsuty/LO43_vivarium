@@ -1,6 +1,20 @@
+/*
+	Fichier: Animal.java
+	Auteur: Zephyr Suty
+	Version: 1.0
+	Date: 13/12/2013
+
+	Package : map
+	Contient: class Animal
+
+	Description:
+	Animal herite d'Objet et represente un animal qui se deplace sur la Map.
+*/
+
 package objets;
 
-public /*abstract*/ class  Animal extends Objet{
+public abstract class  Animal extends Objet
+{
 	protected int vie;
 	protected int faim;
 	protected int energie;
@@ -13,37 +27,62 @@ public /*abstract*/ class  Animal extends Objet{
 	
 	protected boolean male;
 	
-	public Animal(int x, int y, int r){
-		super(x,y);
+	public Animal()
+	{
+		super();
+		this.visionRange = 1;
+	}
+	
+	public Animal(Position p, int r)
+	{
+		super(p);
 		this.visionRange = r;
 	}
 	
 	//---------- Getters ----------
-	public int getVie() {
+	
+	public int getVie() 
+	{
 		return vie;
 	}
-	public int getFaim() {
+	
+	public int getFaim() 
+	{
 		return faim;
 	}
-	public int getEnergie() {
+	
+	public int getEnergie() 
+	{
 		return energie;
 	}
-	public int getSoif() {
+	
+	public int getSoif() 
+	{
 		return soif;
 	}
-	public int getVitesse() {
+	
+	public int getVitesse() 
+	{
 		return vitesse;
 	}
-	public int getAttaque() {
+	
+	public int getAttaque() 
+	{
 		return attaque;
 	}
-	public int getDefense() {
+	
+	public int getDefense() 
+	{
 		return defense;
 	}
-	public int getVisionRange() {
+	
+	public int getVisionRange() 
+	{
 		return visionRange;
 	}
-	public int getNumeroMeute() {
+	
+	public int getNumeroMeute() 
+	{
 		return numeroMeute;
 	}
 }

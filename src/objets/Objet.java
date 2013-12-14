@@ -1,51 +1,67 @@
 /*
 	Fichier: Objet.java
-	Auteur: Justine Ventalon
+	Auteurs: Justine Ventalon, Zephyr Suty
 	Version: 1.0
-	Date: 11/12/2013
+	Date: 13/12/2013
 
 	Package : map
 	Contient: class Objet
 
 	Description:
-	Objet est une classe abstraite qui sera h�rit�e par tous les types d'objets pr�sents sur la Map (Animal, 
+	Objet est une classe abstraite qui sera heritee par tous les types d'objets presents sur la Map (Animal, 
 	Nourriture...)
-	Elle contient uniquement les coordonn�es indiquant la position de l'objet sur la Map (c'est-�-dire
-	l'index de la Case sur laquelle il se trouve).
+	Elle contient uniquement la Position de l'objet sur la Map.
 */
 
 package objets;
 
-// Objet est une classe abstraite qui sera h�rit�e par tous les types d'objets pr�sents sur la Map
-public /*abstract*/ class Objet 
+// Objet est une classe abstraite qui sera heritee par tous les types d'entitees presentes sur la Map
+public abstract class Objet 
 {
-	protected int x;
-	protected int y;
+	protected Position pos;
 	protected boolean franchissable;
 	
-	public Objet(int x, int y){
-		this.x = x;
-		this.y= y;
+	//---------- Constructeurs ----------
+	
+	public Objet()
+	{
+		this.pos = new Position(0,0);
 		this.franchissable = true;
 	}
 	
-	public int getX() {
-		return x;
+	public Objet(Position pos)
+	{
+		this.pos = pos;
+		this.franchissable = true;
 	}
-	public int getY() {
-		return y;
-	}
-	public void setX(int x) {
-		this.x = x;
-	}
-	public void setY(int y) {
-		this.y = y;
-	}
-	public boolean isFranchissable() {
-		return franchissable;
-	};
 	
-	public String toString(){
-		return new String(x + " : " + y);
+	public Objet(Position pos, boolean franchissable)
+	{
+		this.pos = pos;
+		this.franchissable = franchissable;
+	}
+	
+	//---------- Getters ----------
+	
+	public Position getPos()
+	{
+		return pos;
+	}
+	
+	public boolean isFranchissable() 
+	{
+		return franchissable;
+	}
+	
+	//---------- Setters ----------
+	
+	public void setPos(Position pos)
+	{
+		this.pos = pos;
+	}
+	
+	public void setFranchissable(boolean franchissable)
+	{
+		this.franchissable = franchissable;
 	}
 }
