@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +30,8 @@ public class Fenetre extends JFrame implements ActionListener{
 	private static final long serialVersionUID = -585608148684182937L;
 	private GraphicMap gMap;
 	
-	private int xDirection = 0;
-	private int yDirection = 0;
+	private Thread t;
+	private boolean animated = true;
 	
 	/* option de lecture (zoom deplacement carte play pause etc...)*/
 	
@@ -71,7 +70,11 @@ public class Fenetre extends JFrame implements ActionListener{
 		
 		Map m = new Map(50,50);
 		m.getCases()[3][3].setBiome(Biome.MONTAGNE);
-		
+		m.getCases()[8][2].setBiome(Biome.MONTAGNE);
+		m.getCases()[3][12].setBiome(Biome.MONTAGNE);
+		m.getCases()[9][4].setBiome(Biome.MONTAGNE);
+		m.getCases()[7][6].setBiome(Biome.MONTAGNE);
+		m.getCases()[10][6].setBiome(Biome.MONTAGNE);
 		this.gMap = new GraphicMap(m);
 		gMap.setPreferredSize(new Dimension(this.getWidth(), 10000));
 		
@@ -137,8 +140,22 @@ public class Fenetre extends JFrame implements ActionListener{
 		contentPanel.add(buttonPanel);
 		this.setContentPane(contentPanel);
 		
+		t = new Thread(new Animation());
+		t.start();
 	}
+		
 	
+	
+	private void go(){
+		while(this.animated){
+			this.gMap.repaint();  
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource() == zoomPlus){
@@ -147,8 +164,15 @@ public class Fenetre extends JFrame implements ActionListener{
 		else if(arg0.getSource() == zoomMoins){
 			this.gMap.zoomMoins();
 		}
-		this.gMap.repaint();
 	}
-
+	
+	class Animation implements Runnable {
+		public void run() {
+			go();
+		}
+	}
 }
+
+	
+
 
