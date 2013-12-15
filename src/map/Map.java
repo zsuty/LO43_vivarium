@@ -171,7 +171,7 @@ public class Map
 	{
 		Position p = new Position();
 		Hashtable<Position, Noeud> listeOuverte = new Hashtable<Position, Noeud>();
-		Hashtable<Position, Noeud> listeFerm�e = new Hashtable<Position, Noeud>();
+		Hashtable<Position, Noeud> listeFermee = new Hashtable<Position, Noeud>();
 		// TODO
 		return p;
 	}
