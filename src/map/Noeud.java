@@ -19,10 +19,10 @@ import objets.Position;
 
 public class Noeud 
 {
-	double coutG; // coût pour aller du point de départ au noeud considéré
-	double coutH; // coût pour aller du noeud considéré au point de destination
-	double coutF; // somme de coutF et coutH (mémorisée pour ne pas la recalculer à chaque fois)
-	Position parent; // position du parent (noeud par lequel on est arrivé au noeud courant)
+	private double coutG; // coût pour aller du point de départ au noeud considéré
+	private double coutH; // coût pour aller du noeud considéré au point de destination
+	private double coutF; // somme de coutF et coutH (mémorisée pour ne pas la recalculer à chaque fois)
+	private Position parent; // position du parent (noeud par lequel on est arrivé au noeud courant)
 	
 	//---------- Constructeurs ----------
 	
@@ -62,5 +62,27 @@ public class Noeud
 	public Position getParent()
 	{
 		return parent;
+	}
+	
+	//---------- Setters ----------
+	
+	public void setCoutG(double coutG)
+	{
+		this.coutG = coutG;
+	}
+	
+	public void setCoutH(double coutH)
+	{
+		this.coutH = coutH;
+	}
+	
+	public void setCoutF(double coutF)
+	{
+		this.coutF = coutF;
+	}
+	
+	public void setParent(Position parent)
+	{
+		this.parent = parent;
 	}
 }

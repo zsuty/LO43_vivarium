@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class Case 
 {
 	private Biome biome; // biome present sur la case (plaine, montagne...)
-	private ArrayList<Objet> objetsPresents; // tableau contenant les objets presents sur la case
+	private ArrayList<Objet> objetsPresents; // liste des objets presents sur la case
 	private int nbObjet; // nombre d'objets sur la case
 	
 	//---------- Constucteurs ----------

@@ -8,9 +8,9 @@
 	Contient: class Map
 
 	Description:
-	Map reprï¿½sente la carte sur laquelle se dï¿½placent les animaux,
-	elle est composï¿½e de cases (tableau de Case ï¿½ 2 dimensions)
-	et elle contient tous les objets (animaux, nourriture...) prï¿½sents sur la carte (ArrayList d'Objet).
+	Map represente la carte sur laquelle se deplacent les animaux,
+	elle est composee de cases (tableau de Case a 2 dimensions)
+	et elle contient tous les objets (animaux, nourriture...) presents sur la carte (ArrayList d'Objet).
 */
 
 package map;
@@ -20,14 +20,14 @@ import java.util.*;
 import objets.*;
 
 
-// Map est la carte sur laquelle ï¿½voluent les animaux
+// Map est la carte sur laquelle évoluent les animaux
 public class Map 
 {
-	private int derniereMeute; // numï¿½ro de la derniï¿½re meute crï¿½ï¿½e
+	private int derniereMeute; // numéro de la dernière meute créée
 	private int nbLignes; // nombre de lignes du tableau de cases
 	private int nbColonnes; // nombre de colonnes du tableau de cases
-	private Case cases[][]; // tableau de cases ï¿½ 2 dimensions reprï¿½sentant la map
-	private ArrayList<Objet> objets; // liste des objets prï¿½sents sur la map (animaux, nourriture...)
+	private Case cases[][]; // tableau de cases à 2 dimensions représentant la map
+	private ArrayList<Objet> objets; // liste des objets présents sur la map (animaux, nourriture...)
 	
 	//---------- Constructeurs ----------
 	
@@ -164,19 +164,18 @@ public class Map
 		return objetVisible;
 	}
 	
-	/* retourne la position de la prochaine case vers laquelle il faut se dï¿½placer pour aller de la position 
-	posDep vers la position posArr en empruntant le plus court chemin (calculï¿½ avec l'algorithme A*) */
-	
+	/* retourne la position de la prochaine case vers laquelle il faut se déplacer pour aller de la position 
+	posDep vers la position posArr en empruntant le plus court chemin (calculé avec l'algorithme A*) */
 	public Position getDirection(Animal animal, Position pObjectif)
 	{
-		Position p = new Position();
+		Position p = animal.getPos();
 		Hashtable<Position, Noeud> listeOuverte = new Hashtable<Position, Noeud>();
 		Hashtable<Position, Noeud> listeFermee = new Hashtable<Position, Noeud>();
-		// TODO
+		etudierCasesAdjacentes(p, pObjectif, listeOuverte, listeFermee);
 		return p;
 	}
 	
-	//---------- Mï¿½thodes privï¿½es ----------
+	//---------- Méthodes privées ----------
 	
 	/* retourne la distance euclidienne entre 2 positions
 	utilise dans getDirection */
@@ -189,29 +188,60 @@ public class Map
 		return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
 	}
 	
-	private void etudierCasesAdjacentes(Position p)
+	private void etudierCasesAdjacentes(Position p, Position pDest, Hashtable<Position, Noeud> listeOuverte, Hashtable<Position, Noeud> listeFermee)
 	{
 		Noeud temp = new Noeud();
 		
 		 for (int i = p.getX()-1; i <= p.getX()+1; i++)
 		 {
-		        if ((i >= 0) || (i < nbColonnes))  // si la coordonnï¿½e appartient bien ï¿½ la map
+		        if ((i >= 0) && (i < nbColonnes))  
+		        	// si la coordonnée appartient bien à la map
 		        {
 		        	for (int j = p.getY()-1; j <= p.getY()+1; j++)
 		        	{
-		        		//TODO
-		        		/*
-			            if ((j<0) || (j>=s->h))   // en dehors de l'image, on oublie
-			                continue;
-			            if ((i==n.first) && (j==n.second))  // case actuelle n, on oublie
-			                continue;
-			 
-			            if (*((Uint8 *)s->pixels + j * s->pitch + i * s->format->BytesPerPixel) == NOIR)
-			                // obstace, terrain non franchissable, on oublie
-			                continue;
-			 
-			            pair<int,int> it(i,j);
-			            */
+			            if ((j >= 0) && (j < nbLignes))   
+			            	// si la coordonnée appartient bien à la map
+			            {
+			            	if (!((i == p.getX()) && (j == p.getY())))  // si ce n'est pas la case courante
+			            	{
+			            		Position posTemp = new Position(i,j);
+			            		if (getCaseAt(posTemp).getObjetNonFranchissable() == null) 
+			            			// si la case est franchissable
+				                {		            			
+			            			 if (!listeFermee.contains(posTemp)) 
+			            				 // si le noeud n'est pas deja present dans la liste fermee
+			            			 {
+			            				 temp.setParent(p);
+			            				 
+			            	             // calcul du cout G du noeud en cours d'étude : cout du parent + distance jusqu'au parent
+			            				 double coutG = listeFermee.get(p).getCoutG() + distance(posTemp, p);
+			            				 temp.setCoutG(coutG);  
+			            				 
+			            				 // calcul du cout H du noeud en cours d'etude : distance jusqu'a la destination
+			            				 double coutH = distance(posTemp, pDest);
+			            				 temp.setCoutH(coutH);
+			            				 
+			            				 // calcul du cout F
+			            	             temp.setCoutF(coutG + coutH);
+			            	 
+			            	             if (listeOuverte.contains(temp))
+			            	            	 // si le noeud est deja dans la liste ouverte 
+			            	             {
+			            	                    if (temp.getCoutF() < listeOuverte.get(posTemp).getCoutF())
+			            	                    	// si le nouveau chemin est meilleur
+			            	                    {
+			            	                        listeOuverte.put(posTemp, temp);
+			            	                    }
+			            	             }
+			            	             else
+			            	            	 // si le noeud n'est pas encore present dans la liste ouverte
+			            	             {
+			            	            	 listeOuverte.put(posTemp, temp);
+			            	             }
+			            			 }
+				                }
+			            	}
+			            }
 		        	}    
 		       }
 		 }
