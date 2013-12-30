@@ -29,13 +29,13 @@ public abstract class Objet
 		this.franchissable = true;
 	}
 	
-	public Objet(Position pos)
+	public Objet(boolean franchissable)
 	{
-		this.pos = pos;
-		this.franchissable = true;
+		this.pos = new Position(0,0);
+		this.franchissable = franchissable;
 	}
 	
-	public Objet(Position pos, boolean franchissable)
+	public Objet(boolean franchissable, Position pos)
 	{
 		this.pos = pos;
 		this.franchissable = franchissable;

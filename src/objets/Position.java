@@ -57,4 +57,25 @@ public class Position
 	{
 		this.y = y;
 	}
+	
+	//---------- Methodes pour l'utilisation comme clef dans Hashtable ----------
+	
+	public boolean equals(Object obj) 
+	{
+	    if (!(obj instanceof Position)) 
+	    {
+	        return false;
+	    } 
+	    else 
+	    {
+	        Position that = (Position)obj;
+	        return (this.x == that.x) && (this.y == that.y);
+	    }
+	}
+
+	public int hashCode() 
+	{
+	    int hash = this.x + this.y;
+	    return hash;
+	}
 }
