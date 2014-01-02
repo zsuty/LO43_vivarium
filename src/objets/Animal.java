@@ -13,10 +13,12 @@
 
 package objets;
 
+
 import Action.Action;
 import map.Map;
 
 public abstract class  Animal extends Objet
+
 {
 	protected int vie;
 	protected int faim;
@@ -32,13 +34,19 @@ public abstract class  Animal extends Objet
 	
 	public Animal()
 	{
-		super();
+		super(false);
 		this.visionRange = 1;
+	}
+	
+	public Animal(int r)
+	{
+		super(false);
+		this.visionRange = r;
 	}
 	
 	public Animal(Position p, int r)
 	{
-		super(p);
+		super(false, p);
 		this.visionRange = r;
 	}
 	
