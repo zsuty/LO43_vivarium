@@ -17,38 +17,40 @@ package map;
 
 import java.util.*;
 
+import Action.Action;
+
 import objets.*;
 
 
-// Map est la carte sur laquelle évoluent les animaux
+// Map est la carte sur laquelle ï¿½voluent les animaux
 public class Map 
 {
-	private int derniereMeute; // numéro de la dernière meute créée
-	private int nbLignes; // nombre de lignes du tableau de cases
-	private int nbColonnes; // nombre de colonnes du tableau de cases
-	private Case cases[][]; // tableau de cases à 2 dimensions représentant la map
-	private ArrayList<Objet> objets; // liste des objets présents sur la map (animaux, nourriture...)
+	private int derniereMeute; // numï¿½ro de la derniï¿½re meute crï¿½ï¿½e
+	private int nbX; // nombre de lignes du tableau de cases
+	private int nbY; // nombre de colonnes du tableau de cases
+	private Case cases[][]; // tableau de cases ï¿½ 2 dimensions reprï¿½sentant la map
+	private ArrayList<Objet> objets; // liste des objets prï¿½sents sur la map (animaux, nourriture...)
 	
 	//---------- Constructeurs ----------
 	
 	public Map()
 	{
 		derniereMeute = 0;
-		nbLignes = 0;
-		nbColonnes = 0;
-		cases = new Case[nbLignes][nbColonnes];
+		nbX = 0;
+		nbY = 0;
+		cases = new Case[nbX][nbY];
 		objets = new ArrayList<Objet>();
 	}
 	
 	public Map(int nbLignes, int nbColonnes)
 	{
 		derniereMeute = 0;
-		this.nbLignes = nbLignes;
-		this.nbColonnes = nbColonnes;
+		this.nbX = nbLignes;
+		this.nbY = nbColonnes;
 		cases = new Case[nbLignes][nbColonnes];
-		for(int i = 0; i < this.nbLignes; ++i)
+		for(int i = 0; i < this.nbX; ++i)
 		{
-			for(int j = 0; j < this.nbColonnes; ++j)
+			for(int j = 0; j < this.nbY; ++j)
 			{
 				this.cases[i][j] = new Case();
 			}
@@ -63,14 +65,14 @@ public class Map
 		return derniereMeute;
 	}
 	
-	public int getNbLignes()
+	public int getNbX()
 	{
-		return nbLignes;
+		return nbX;
 	}
 	
-	public int getNbColonnes()
+	public int getNbY()
 	{
-		return nbColonnes;
+		return nbY;
 	}
 	
 	public Case[][] getCases()
@@ -85,7 +87,7 @@ public class Map
 	
 	public Case getCaseAt(Position pos)
 	{
-		if (pos.getX() < nbColonnes && pos.getY() < nbLignes)
+		if (pos.getX() < nbX && pos.getY() < nbY)
 		{
 			return cases[pos.getX()][pos.getY()];
 		}
@@ -105,17 +107,26 @@ public class Map
 	retourne false si l'objet n'a pas pu etre ajoute car la case n'est pas franchissable */
 	public boolean ajouterObjet(Objet objet)
 	{
-		if(cases[objet.getPos().getX()][objet.getPos().getY()].ajouterObjet(objet))
-		{
-			objets.add(objet);
-			return true;
+		if((objet.getPos().getX() >= 0 && objet.getPos().getX() < this.nbX) && (objet.getPos().getY() >= 0 && objet.getPos().getY() < this.nbY)){
+			if(cases[objet.getPos().getX()][objet.getPos().getY()].ajouterObjet(objet))
+			{
+				objets.add(objet);
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	public void supprimerObjet(Objet objet)
 	{
+		this.getCaseAt(objet.getPos()).getObjetsPresents().remove(objet);
 		objets.remove(objet);
+	}
+	public void suprimerObjetsCase(Position p){
+		for(Objet o : this.getCaseAt(p).getObjetsPresents()){
+			objets.remove(o);
+		}
+		this.getCaseAt(p).setObjetsPresents(new ArrayList <Objet>());
 	}
 
 	//---------- Gestion des cases ----------
@@ -143,7 +154,7 @@ public class Map
 					positionX = i + animal.getPos().getX();
 					positionY = j + animal.getPos().getY();
 					
-					if((positionX >= 0 && positionX < this.nbLignes) && (positionY >= 0 && positionY < this.nbColonnes))
+					if((positionX >= 0 && positionX < this.nbX) && (positionY >= 0 && positionY < this.nbY))
 					{
 						tempCase = this.cases[positionX][positionY];
 						if(tempCase.getNbObjet() != 0)
@@ -164,8 +175,8 @@ public class Map
 		return objetVisible;
 	}
 	
-	/* retourne la position de la prochaine case vers laquelle il faut se déplacer pour aller de la position 
-	posDep vers la position posArr en empruntant le plus court chemin (calculé avec l'algorithme A*) */
+	/* retourne la position de la prochaine case vers laquelle il faut se dï¿½placer pour aller de la position 
+	posDep vers la position posArr en empruntant le plus court chemin (calculï¿½ avec l'algorithme A*) */
 	public Position getDirection(Animal animal, Position pObjectif)
 	{
 		Position p = animal.getPos();
@@ -175,7 +186,7 @@ public class Map
 		return p;
 	}
 	
-	//---------- Méthodes privées ----------
+	//---------- Mï¿½thodes privï¿½es ----------
 	
 	/* retourne la distance euclidienne entre 2 positions
 	utilise dans getDirection */
@@ -194,13 +205,13 @@ public class Map
 		
 		 for (int i = p.getX()-1; i <= p.getX()+1; i++)
 		 {
-		        if ((i >= 0) && (i < nbColonnes))  
-		        	// si la coordonnée appartient bien à la map
+		        if ((i >= 0) && (i < nbX))  
+		        	// si la coordonnï¿½e appartient bien ï¿½ la map
 		        {
 		        	for (int j = p.getY()-1; j <= p.getY()+1; j++)
 		        	{
-			            if ((j >= 0) && (j < nbLignes))   
-			            	// si la coordonnée appartient bien à la map
+			            if ((j >= 0) && (j < nbY))   
+			            	// si la coordonnï¿½e appartient bien ï¿½ la map
 			            {
 			            	if (!((i == p.getX()) && (j == p.getY())))  // si ce n'est pas la case courante
 			            	{
@@ -213,7 +224,7 @@ public class Map
 			            			 {
 			            				 temp.setParent(p);
 			            				 
-			            	             // calcul du cout G du noeud en cours d'étude : cout du parent + distance jusqu'au parent
+			            	             // calcul du cout G du noeud en cours d'ï¿½tude : cout du parent + distance jusqu'au parent
 			            				 double coutG = listeFermee.get(p).getCoutG() + distance(posTemp, p);
 			            				 temp.setCoutG(coutG);  
 			            				 
@@ -245,5 +256,26 @@ public class Map
 		        	}    
 		       }
 		 }
+	}
+	
+	public boolean Deplacer(Animal animal, Position position){
+		if((position.getX() >= 0 && position.getX() < this.nbX) && (position.getY() >= 0 && position.getY() < this.nbY)){
+			if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
+				if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
+					animal.setPos(new Position(position.getX(), position.getY()));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void upDate(ArrayList <Action> actionList){
+		String s = new String();
+		for(Action action : actionList){
+			if(!action.action(s)){
+				System.out.println(s);
+			}
+		}
 	}
 }

@@ -13,6 +13,9 @@
 
 package objets;
 
+import Action.Action;
+import map.Map;
+
 public abstract class  Animal extends Objet
 {
 	protected int vie;
@@ -85,4 +88,5 @@ public abstract class  Animal extends Objet
 	{
 		return numeroMeute;
 	}
+	public abstract Action decider(Map map);
 }

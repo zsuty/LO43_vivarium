@@ -61,6 +61,9 @@ public class Case
 	{
 		this.biome = biome;
 	}
+	public void setObjetsPresents(ArrayList <Objet> o){
+		this.objetsPresents = o;
+	}
 	
 	//---------- Gestion des objets ----------
 	
@@ -81,13 +84,14 @@ public class Case
 	retourne null s'il n'y en a pas */
 	public Objet getObjetNonFranchissable()
 	{
-		for (int i = 0; i < nbObjet; ++i)
-		{
-			if (!objetsPresents.get(i).isFranchissable())
-			{
-				return objetsPresents.get(i);
+		for(Objet o : this.objetsPresents){
+			if(!o.isFranchissable()){
+				return o;
 			}
 		}
 		return null;
+	}
+	public boolean suprimerObjet (Objet o){
+		return this.objetsPresents.remove(o);
 	}
 }

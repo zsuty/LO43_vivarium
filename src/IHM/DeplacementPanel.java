@@ -1,11 +1,14 @@
 package IHM;
 
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 public class DeplacementPanel extends JPanel implements ActionListener{
 
@@ -18,7 +21,6 @@ public class DeplacementPanel extends JPanel implements ActionListener{
 	private JButton bas;
 	private JButton droite;
 	private JButton gauche;
-	private JPanel M;
 
 	private GraphicMap gMap;
 	
@@ -29,21 +31,24 @@ public class DeplacementPanel extends JPanel implements ActionListener{
 		this.bas =new JButton();
 		this.droite =new JButton();
 		this.gauche =new JButton();
-		this.M = new JPanel();
 		
 		this.haut.addActionListener(this);
 		this.bas.addActionListener(this);
 		this.gauche.addActionListener(this);
 		this.droite.addActionListener(this);
 		
-		M.setLayout(new BoxLayout(M, BoxLayout.X_AXIS));
-		M.add(this.gauche);
-		M.add(this.droite);
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		this.setLayout(new GridLayout(3, 3));
+		this.add(new JLabel());
 		this.add(this.haut);
-		this.add(this.M);
+		this.add(new JLabel());
+		this.add(this.gauche);
+		this.add(new JLabel());
+		this.add(this.droite);
+		this.add(new JLabel());
 		this.add(this.bas);
+		this.add(new JLabel());
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
