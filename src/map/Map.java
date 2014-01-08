@@ -140,7 +140,7 @@ public class Map
 	
 	// renvoie la liste des objets que voit un animal
 	
-	/*public ArrayList<Objet> getVision(Animal animal)
+	public ArrayList<Objet> getVision(Animal animal)
 	{
 		int i,j,k,positionX,positionY;
 		Case tempCase;
@@ -173,11 +173,11 @@ public class Map
 			}
 		}
 		return objetVisible;
-	}*/
+	}
 	
 	/* retourne la position de la prochaine case vers laquelle il faut se d�placer pour aller de la position 
 	posDep vers la position posArr en empruntant le plus court chemin (calcul� avec l'algorithme A*) */
-	public Position getDirection(Animal animal, Position pObjectif)
+	public ArrayList<Position> getDirection(Animal animal, Position pObjectif, int nbPas)
 	{
 		Position pDepart = animal.getPos();
 		Hashtable<Position, Noeud> listeOuverte = new Hashtable<Position, Noeud>();
@@ -207,6 +207,8 @@ public class Map
 	        etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
 	    }
 	    
+        ArrayList<Position> direction = new ArrayList<Position>();
+        
 	    /* si la destination est atteinte, on remonte le chemin */
 	    if (pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY())
 	    {
@@ -214,15 +216,18 @@ public class Map
 	        ArrayList<Position> chemin = retrouverChemin(listeFermee, pDepart, pObjectif);
 	        if (!chemin.isEmpty())
 	        {
-		        Position pDirection = chemin.get(chemin.size()-1);
-		        if (!(pDirection.getX() == pObjectif.getX() && pDirection.getY() == pObjectif.getY()))
-		        {
-		        	return pDirection;
-		        }
+	        	for (int i = 0; i < nbPas && chemin.size()-1-i >= 0; i++)
+	        	{
+	        		Position p = chemin.get(chemin.size()-1-i);
+			        direction.set(i, p);
+			        if (p.getX() == pObjectif.getX() && p.getY() == pObjectif.getY())
+			        {
+			        	i = nbPas; // on sort de la boucle
+			        }
+	        	}
 	        }
 	    }
-	    
-	    return null;
+	    return direction;
 	}
 	
 	//---------- M�thodes priv�es ----------
