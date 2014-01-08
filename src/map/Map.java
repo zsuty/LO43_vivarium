@@ -182,51 +182,57 @@ public class Map
 		Hashtable<Position, Noeud> listeOuverte = new Hashtable<Position, Noeud>();
 		Hashtable<Position, Noeud> listeFermee = new Hashtable<Position, Noeud>();
 		Noeud nCourant = new Noeud();
-	 
-	    /* d�roulement de l'algo A* */
-	 
-	    /* initialisation du noeud courant */
-		Position pCourant = pDepart;
-		
-		/* ajout de courant dans la liste ouverte */
-		listeOuverte.put(pCourant, nCourant);
-	    ajouterListeFermee(listeOuverte, listeFermee, pCourant);
-	    etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
-	 
-	    /* tant que la destination n'a pas ete atteinte et qu'il reste des noeuds a explorer dans la liste ouverte */
-	    while (!(pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY()) && (!listeOuverte.isEmpty()))
-	    {
-	        /* on cherche le meilleur noeud de la liste ouverte (elle n'est pas vide donc il existe) */
-	        pCourant = meilleurNoeud(listeOuverte);
+		if (pDepart.getX() == pObjectif.getX() && pDepart.getY() == pObjectif.getY())
+		{
+			return null;
+		}
+		else
+		{
+		    /* d�roulement de l'algo A* */
+		 
+		    /* initialisation du noeud courant */
+			Position pCourant = pDepart;
+			
+			/* ajout de courant dans la liste ouverte */
+			listeOuverte.put(pCourant, nCourant);
+		    ajouterListeFermee(listeOuverte, listeFermee, pCourant);
+		    etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
+		 
+		    /* tant que la destination n'a pas ete atteinte et qu'il reste des noeuds a explorer dans la liste ouverte */
+		    while (!(pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY()) && (!listeOuverte.isEmpty()))
+		    {
+		        /* on cherche le meilleur noeud de la liste ouverte (elle n'est pas vide donc il existe) */
+		        pCourant = meilleurNoeud(listeOuverte);
+		        
+		        /* on le passe dans la liste fermee, il ne peut pas d�j� y �tre */
+		        ajouterListeFermee(listeOuverte, listeFermee, pCourant);
+		 
+		        /* on recommence la recherche des noeuds adjacents */
+		        etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
+		    }
+		    
+	        ArrayList<Position> direction = new ArrayList<Position>();
 	        
-	        /* on le passe dans la liste fermee, il ne peut pas d�j� y �tre */
-	        ajouterListeFermee(listeOuverte, listeFermee, pCourant);
-	 
-	        /* on recommence la recherche des noeuds adjacents */
-	        etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
-	    }
-	    
-        ArrayList<Position> direction = new ArrayList<Position>();
-        
-	    /* si la destination est atteinte, on remonte le chemin */
-	    if (pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY())
-	    {
-	    	
-	        ArrayList<Position> chemin = retrouverChemin(listeFermee, pDepart, pObjectif);
-	        if (!chemin.isEmpty())
-	        {
-	        	for (int i = 0; i < nbPas && chemin.size()-1-i >= 0; i++)
-	        	{
-	        		Position p = chemin.get(chemin.size()-1-i);
-			        direction.add(p);
-			        if (p.getX() == pObjectif.getX() && p.getY() == pObjectif.getY())
-			        {
-			        	i = nbPas; // on sort de la boucle
-			        }
-	        	}
-	        }
-	    }
-	    return direction;
+		    /* si la destination est atteinte, on remonte le chemin */
+		    if (pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY())
+		    {
+		    	
+		        ArrayList<Position> chemin = retrouverChemin(listeFermee, pDepart, pObjectif);
+		        if (!chemin.isEmpty())
+		        {
+		        	for (int i = 0; i < nbPas && chemin.size()-1-i >= 0; i++)
+		        	{
+		        		Position p = chemin.get(chemin.size()-1-i);
+				        direction.add(p);
+				        if (p.getX() == pObjectif.getX() && p.getY() == pObjectif.getY())
+				        {
+				        	i = nbPas; // on sort de la boucle
+				        }
+		        	}
+		        }
+		    }
+		    return direction;
+		}
 	}
 	
 	//---------- M�thodes priv�es ----------
