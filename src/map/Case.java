@@ -71,10 +71,15 @@ public class Case
 	retourne false si l'objet n'a pas pu etre ajoute car la case contient deja un objet non franchissable */
 	public boolean ajouterObjet(Objet objet)
 	{
-		if (getObjetNonFranchissable() == null) // si tous les objets deja presents sur la case sont franchissables
+		if (getObjetNonFranchissable() == null || objet.isFranchissable()) // si tous les objets deja presents sur la case sont franchissables
 		{
 				++nbObjet;
-				objetsPresents.add(objet);
+				if(objet.isFranchissable()){
+					objetsPresents.add(0,objet);
+				}
+				else{
+					objetsPresents.add(objet);
+				}
 				return true;
 		}
 		return false;

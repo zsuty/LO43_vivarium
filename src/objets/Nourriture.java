@@ -11,4 +11,8 @@ public class Nourriture extends Objet{
 		this.quantite = quantite;
 		this.viande = type;
 	}
+	
+	public boolean isViande() {
+		return viande;
+	}
 }

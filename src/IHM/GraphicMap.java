@@ -2,12 +2,20 @@ package IHM;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.ObjectInputStream.GetField;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import objets.Antilope;
+import objets.Eau;
 import objets.Lion;
+import objets.Nourriture;
 import objets.Objet;
+import objets.Rocher;
 
 import map.Case;
 import map.Map;
@@ -30,11 +38,43 @@ public class GraphicMap extends JPanel{
 	private int margeX;
 	private int margeY;
 	
+	/* ---- image ---- */
+	private BufferedImage LionImage;
+	private BufferedImage AntilopeImage;
+	private BufferedImage RocherImage;
+	private BufferedImage Herbe;
+	private BufferedImage Viande;
+	
 	public GraphicMap(Map map){
 		super();
-		this.RectSize = 15;
+		this.RectSize = 60;
 		this.map = map;
 		this.setVariable();
+		
+		/* initialisation des images */
+		
+		try {
+			this.LionImage = ImageIO.read(new File("Image/Lion_M.png"));
+		} catch (IOException e) {
+		}
+		
+		try {
+			this.RocherImage = ImageIO.read(new File("Image/Rocher.png"));
+		} catch (IOException e) {
+		}
+		
+		try {
+			this.AntilopeImage =  ImageIO.read(new File("Image/Antilope.png"));
+		} catch (IOException e) {
+		}
+		try {
+			this.Herbe =  ImageIO.read(new File("Image/Herbe.png"));
+		} catch (IOException e) {
+		}
+		try {
+			this.Viande =  ImageIO.read(new File("Image/Viande.png"));
+		} catch (IOException e) {
+		}
 	}
 	public void setVariable(){
 		nbCaseX = Math.min(this.getWidth()/this.RectSize,this.map.getNbX());
@@ -51,7 +91,7 @@ public class GraphicMap extends JPanel{
 	}
 	public void paintComponent(Graphics g){
 		int i,j,x,y;
-		
+		BufferedImage img;
 		margeX = (this.getWidth() - (nbCaseX*this.RectSize))/2;
 		margeY = (this.getHeight() - (nbCaseY*this.RectSize))/2;
 		
@@ -63,14 +103,20 @@ public class GraphicMap extends JPanel{
 			x = i*this.RectSize + margeX;
 			for(j = 0; j < nbCaseY ; ++j){
 				y = j*this.RectSize + margeY;
-				g.setColor(getColor(this.map.getCases()[i + Istart][j + Jstart].getBiome()));
-				g.fillRect(x, y, this.RectSize, this.RectSize);
-				for(Objet o : this.map.getCases()[i + Istart][j + Jstart].getObjetsPresents()){
-					g.setColor(Color.black);
-					g.drawString(this.getImage(o), x, y + this.RectSize);
+				if(i < this.map.getNbX() - this.Istart && j < this.map.getNbY() - this.Jstart){
+					g.setColor(getColor(this.map.getCases()[i + Istart][j + Jstart].getBiome()));
+					g.fillRect(x, y, this.RectSize, this.RectSize);
+					for(Objet o : this.map.getCases()[i + Istart][j + Jstart].getObjetsPresents()){
+						img = this.getImageObjet(o);
+						if(img != null && this.RectSize >= 40){
+							g.drawImage(img, x, y, this.RectSize, this.RectSize, null);
+						}
+						else {
+							g.setColor(this.getColorObjet(o));
+							g.fillRect( x, y,this.RectSize,this.RectSize);
+						}
+					}
 				}
-				g.setColor(Color.black);
-				g.drawRect(x, y, this.RectSize, this.RectSize);
 			}
 		}
 		
@@ -91,13 +137,43 @@ public class GraphicMap extends JPanel{
 		}
 		return Color.white;
 	}
-	protected String getImage(Objet o){
+	protected Color getColorObjet(Objet o){
 		if(o instanceof Lion){
-			return new String("Li");
+			return Color.red;
 		}
-		/*else if(o instanceof Rocher){
-			return new String("Ro");
-		}*/
+		if(o instanceof Eau){
+			if (o.isFranchissable()){
+				return new Color(6,184,195);
+			}
+			return Color.blue;
+		}
+		if(o instanceof Rocher){
+			return new Color(100,100,100);
+		}
+		if(o instanceof Antilope){
+			return Color.green;
+		}
+		return null;
+	}
+	protected BufferedImage getImageObjet(Objet o){
+		if(o instanceof Lion){
+			return this.LionImage;
+		}
+		if(o instanceof Rocher){
+			return this.RocherImage;
+		}
+		if(o instanceof Antilope){
+			return this.AntilopeImage;
+		}
+		if(o instanceof Nourriture){
+			Nourriture n = (Nourriture) o;
+			if(n.isViande()){
+				return this.Viande;
+			}
+			else{
+				return this.Herbe;
+			}
+		}
 		return null;
 	}
 	
@@ -148,5 +224,22 @@ public class GraphicMap extends JPanel{
 	}
 	public int getMargeY() {
 		return margeY;
+	}
+	
+	public void setxStart(int xStart) {
+		if(xStart >= 0 ){
+			this.xStart = xStart;
+		}
+		else{
+			this.xStart = 0;
+		}
+	}
+	public void setyStart(int yStart) {
+		if (yStart >= 0){
+			this.yStart = yStart;
+		}
+		else{
+			this.yStart = 0;
+		}
 	}
 }

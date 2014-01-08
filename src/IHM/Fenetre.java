@@ -31,8 +31,12 @@ import Action.ModifierBiome;
 import Action.Suprimer;
 
 import objets.Animal;
+import objets.Antilope;
+import objets.Eau;
 import objets.Lion;
+import objets.Nourriture;
 import objets.Position;
+import objets.Rocher;
 
 import map.Biome;
 import map.Map;
@@ -260,9 +264,27 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 				this.actionList.add(action);
 				
 			}
-			/*else if(ajoutOption.getObjet().equals("Antilope")){
+			else if(ajoutOption.getObjet().equals("Antilope")){
 				action = new Ajouter(this.gMap.getMap(), new Antilope(p));
-			}*/			
+				this.actionList.add(action);
+			}
+			else if(ajoutOption.getObjet().equals("Eau")){
+				action = new Ajouter(this.gMap.getMap(), new Eau(true,p));
+				this.actionList.add(action);
+			}
+			else if(ajoutOption.getObjet().equals("Rocher")){
+				action = new Ajouter(this.gMap.getMap(), new Rocher(p));
+				this.actionList.add(action);
+			}
+			else if(ajoutOption.getObjet().equals("Herbe")){
+				action = new Ajouter(this.gMap.getMap(), new Nourriture(p, false, 10, 20));
+				this.actionList.add(action);
+			}
+			else if(ajoutOption.getObjet().equals("Viande")){
+				action = new Ajouter(this.gMap.getMap(), new Nourriture(p, true, 10, 20));
+				this.actionList.add(action);
+			}
+			
 			break;
 		
 		case MODIFICATION_BIOME:
@@ -276,7 +298,6 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		default:
 			break;
 		}
-		System.out.println("top");
 		
 	}
 }
