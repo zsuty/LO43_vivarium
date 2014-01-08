@@ -3,9 +3,11 @@ package map;
 import java.util.ArrayList;
 
 import Action.Action;
+import Action.Deplacer;
 
 import objets.Animal;
 import objets.Objet;
+import objets.Position;
 
 public class Scheduler extends Thread{
 	private Map map;
@@ -22,10 +24,14 @@ public class Scheduler extends Thread{
 		while(true){
 			for(Objet o : this.map.getObjets()){
 				if(o instanceof Animal){
-
-					System.out.println("prout");
-					tempAnimal = (Animal)o;
-					actionList.add(tempAnimal.decider(this.map));
+					ArrayList <Deplacer> d = new ArrayList<Deplacer>();
+					System.out.println("2");
+					System.out.println(this.map.getDirection((Animal)o , new Position(5,5), 1));
+					for(Position p : this.map.getDirection((Animal)o , new Position(5,5), 1)){
+						System.out.println("3");
+						d.add(new Deplacer(this.map, (Animal) o, p));
+					}
+					actionList.addAll(d);
 				}
 			}
 			this.map.upDate(actionList);

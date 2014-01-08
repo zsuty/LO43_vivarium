@@ -1,6 +1,5 @@
 package IHM;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -12,7 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -30,7 +28,6 @@ import Action.Ajouter;
 import Action.ModifierBiome;
 import Action.Suprimer;
 
-import objets.Animal;
 import objets.Antilope;
 import objets.Eau;
 import objets.Lion;
@@ -95,14 +92,7 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		
 		this.actionList = new ArrayList<Action>();
 		m = new Map(50,50);
-		m.getCases()[3][3].setBiome(Biome.MONTAGNE);
-		m.getCases()[8][2].setBiome(Biome.MONTAGNE);
-		m.getCases()[3][12].setBiome(Biome.MONTAGNE);
-		m.getCases()[9][4].setBiome(Biome.MONTAGNE);
-		m.getCases()[7][6].setBiome(Biome.MONTAGNE);
-		m.getCases()[10][6].setBiome(Biome.MONTAGNE);
-		m.ajouterObjet(new Lion(new Position(0,0)));
-		//m.ajouterObjet(new Lion(new Position(0, 0)));
+		
 		this.gMap = new GraphicMap(m);
 		gMap.addMouseListener(this);
 		gMap.setPreferredSize(new Dimension(this.getWidth(), 1000));
@@ -179,9 +169,9 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		this.setContentPane(contentPanel);
 		
 		t = new Thread(new Animation());
-		//s = new Scheduler(m);
+		s = new Scheduler(m);
 		t.start();
-		//s.start();
+		s.start();
 	}
 		
 	

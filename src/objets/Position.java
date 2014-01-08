@@ -8,13 +8,13 @@
 	Contient: class Position
 
 	Description:
-	Position est une classe représentant une position correspondant à une Case sur la Map.
-	Elle contient les coordonnées de cette position.
+	Position est une classe reprï¿½sentant une position correspondant ï¿½ une Case sur la Map.
+	Elle contient les coordonnï¿½es de cette position.
 */
 
 package objets;
 
-// Position est un couple de coordonnées indiquant une Case de la Map.
+// Position est un couple de coordonnï¿½es indiquant une Case de la Map.
 public class Position 
 {
 	private int x;
@@ -77,5 +77,9 @@ public class Position
 	{
 	    int hash = this.x + this.y;
 	    return hash;
+	}
+	@Override
+	public String toString() {
+		return new String("x = " + x + "y= " + y);
 	}
 }

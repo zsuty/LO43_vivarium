@@ -305,8 +305,9 @@ public class Map
 	}
 	public boolean Deplacer(Animal animal, Position position){
 		if((position.getX() >= 0 && position.getX() < this.nbX) && (position.getY() >= 0 && position.getY() < this.nbY)){
-			if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
-				if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
+			
+			if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
+				if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
 					animal.setPos(new Position(position.getX(), position.getY()));
 					return true;
 				}

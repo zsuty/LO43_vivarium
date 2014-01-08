@@ -17,7 +17,6 @@ public class Deplacer extends Action{
 	
 	@Override
 	public boolean action(String s) {
-		
 		s = new String("erreur dansle deplacement");
 		return this.map.Deplacer(this.animal, this.position);
 	}
