@@ -1,9 +1,9 @@
 package main;
 
-import java.util.Hashtable;
+import java.util.*;
 
 import IHM.Fenetre;
-import map.*;
+import map.Map;
 import objets.*;
 
 
@@ -15,6 +15,5 @@ public class Test
 		Fenetre fenetre;
 		fenetre = new Fenetre();
 		fenetre.setVisible(true);
-		
 	}
 }

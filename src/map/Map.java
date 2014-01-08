@@ -17,8 +17,7 @@ package map;
 
 import java.util.*;
 
-import Action.Action;
-
+import Action.*;
 import objets.*;
 
 
@@ -219,7 +218,7 @@ public class Map
 	        	for (int i = 0; i < nbPas && chemin.size()-1-i >= 0; i++)
 	        	{
 	        		Position p = chemin.get(chemin.size()-1-i);
-			        direction.set(i, p);
+			        direction.add(p);
 			        if (p.getX() == pObjectif.getX() && p.getY() == pObjectif.getY())
 			        {
 			        	i = nbPas; // on sort de la boucle
