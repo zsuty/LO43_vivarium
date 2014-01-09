@@ -49,7 +49,18 @@ public abstract class  Animal extends Objet
 		super(false, p);
 		this.visionRange = r;
 	}
-	
+	public Animal(Animal a){
+		super((Objet)a);
+		this.vie = a.getVie();
+		this.faim = a.getFaim();
+		this.energie = a.getEnergie();
+		this.soif =a.getSoif();
+		this.vitesse = a.getVitesse();
+		this.attaque = a.getAttaque();
+		this.defense = a.getDefense();
+		this.visionRange = a.getVisionRange();
+		this.numeroMeute = this.getNumeroMeute();
+	}
 	//---------- Getters ----------
 	
 	public int getVie() 

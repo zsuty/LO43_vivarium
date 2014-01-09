@@ -74,23 +74,34 @@ public class Map
 		return nbY;
 	}
 	
-	public Case[][] getCases()
+	public synchronized Case[][] getCases()
 	{
 		return cases;
 	}
 	
-	public ArrayList<Objet> getObjets()
+	public synchronized ArrayList<Objet> getObjets()
 	{
 		return objets;
 	}
 	
-	public Case getCaseAt(Position pos)
+	public synchronized Case getCaseAt(Position pos)
 	{
 		if (pos.getX() < nbX && pos.getY() < nbY)
 		{
 			return cases[pos.getX()][pos.getY()];
 		}
 		return null;
+	}
+	
+	public Case[][] getCopieCases(){
+		int i,j;
+		Case [][] newCases = new Case [this.nbX][this.nbY];
+		for(i = 0; i < this.nbX; ++i){
+			for(j = 0; j < this.nbY; ++j){
+				newCases[i][j] = new Case(this.cases[i][j]);
+			}
+		}
+		return newCases;
 	}
 	
 	//---------- Gestion des meutes ----------
@@ -173,6 +184,9 @@ public class Map
 		}
 		return objetVisible;
 	}
+	
+	
+	
 	
 	/* retourne la position de la prochaine case vers laquelle il faut se d�placer pour aller de la position 
 	posDep vers la position posArr en empruntant le plus court chemin (calcul� avec l'algorithme A*) */
@@ -323,7 +337,7 @@ public class Map
 		return false;
 	}
 	
-	public void upDate(ArrayList <Action> actionList){
+	public synchronized void upDate(ArrayList <Action> actionList){
 		String s = new String();
 		for(Action action : actionList){
 			if(!action.action(s)){

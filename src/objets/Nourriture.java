@@ -12,7 +12,20 @@ public class Nourriture extends Objet{
 		this.viande = type;
 	}
 	
+	public Nourriture(Nourriture n){
+		super((Objet)n);
+		this.avarie = n.getAvarie();
+		this.viande = n.isViande();
+		this.quantite = n.getQuantite();
+	}
+	
 	public boolean isViande() {
 		return viande;
+	}
+	public int getAvarie() {
+		return avarie;
+	}
+	public int getQuantite() {
+		return quantite;
 	}
 }

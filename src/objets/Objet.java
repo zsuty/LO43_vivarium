@@ -40,6 +40,10 @@ public abstract class Objet
 		this.pos = pos;
 		this.franchissable = franchissable;
 	}
+	public Objet(Objet o){
+		this.pos = new Position(o.getPos());
+		this.franchissable = o.isFranchissable();
+	}
 	
 	//---------- Getters ----------
 	

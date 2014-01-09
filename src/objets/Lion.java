@@ -11,7 +11,9 @@ public class Lion extends Animal{
 		this.pos = p;
 		this.franchissable = false;
 	}
-
+	public Lion(Lion l){
+		super((Animal)l);
+	}
 	@Override
 	public Action decider(Map map) {
 		

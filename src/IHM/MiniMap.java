@@ -28,9 +28,9 @@ public class MiniMap extends JPanel implements MouseListener{
 		this.addMouseListener(this);
 	}
 	public void SetVariable(){
-		rectSize = Math.min((this.getWidth()/(this.gMap.getMap().getNbX())),(this.getHeight()/(this.gMap.getMap().getNbY())));
-		margeX =(this.getWidth() - (rectSize * this.gMap.getMap().getNbX()))/2;
-		margeY = (this.getHeight() - (rectSize * this.gMap.getMap().getNbY()))/2;
+		rectSize = Math.min((this.getWidth()/(this.gMap.getMapNbX())),(this.getHeight()/(this.gMap.getMapNbY())));
+		margeX =(this.getWidth() - (rectSize * this.gMap.getMapNbX()))/2;
+		margeY = (this.getHeight() - (rectSize * this.gMap.getMapNbY()))/2;
 		xVue = this.gMap.getIstart() * rectSize + margeX;
 		yVue = this.gMap.getJstart() * rectSize + margeY;
 		xVueTaille = this.gMap.getNbCaseX() * rectSize;
@@ -41,11 +41,11 @@ public class MiniMap extends JPanel implements MouseListener{
 		int i,j;
 		g.setColor(new Color(101,77,48));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		for(i = 0; i < this.gMap.getMap().getNbX(); ++i){
-			for(j = 0; j < this.gMap.getMap().getNbY(); ++j){
-				g.setColor(this.gMap.getColor(this.gMap.getMap().getCases()[i][j].getBiome()));
+		for(i = 0; i < this.gMap.getMapNbX(); ++i){
+			for(j = 0; j < this.gMap.getMapNbY(); ++j){
+				g.setColor(this.gMap.getColor(this.gMap.getCaseMap()[i][j].getBiome()));
 				g.fillRect((i*rectSize) + margeX, (j*rectSize) + margeY, rectSize, rectSize);
-				for(Objet o : this.gMap.getMap().getCases()[i][j].getObjetsPresents()){
+				for(Objet o : this.gMap.getCaseMap()[i][j].getObjetsPresents()){
 					g.setColor(this.gMap.getColorObjet(o));
 					g.fillRect( i * this.rectSize + this.margeX, j * this.rectSize + this.margeY,this.rectSize,this.rectSize);
 				}

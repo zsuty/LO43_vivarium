@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -27,7 +25,9 @@ public class GraphicMap extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = -513186854840568736L;
-	private Map map;
+	private Case [][] caseMap;
+	private int mapNbX;
+	private int mapNbY;
 	private int RectSize;
 	private int xStart = 0;
 	private int yStart = 0;
@@ -48,9 +48,10 @@ public class GraphicMap extends JPanel{
 	public GraphicMap(Map map){
 		super();
 		this.RectSize = 60;
-		this.map = map;
 		this.setVariable();
-		
+		this.caseMap = map.getCopieCases();
+		this.mapNbX = map.getNbX();
+		this.mapNbY = map.getNbY();
 		/* initialisation des images */
 		
 		try {
@@ -77,15 +78,15 @@ public class GraphicMap extends JPanel{
 		}
 	}
 	public void setVariable(){
-		nbCaseX = Math.min(this.getWidth()/this.RectSize,this.map.getNbX());
-		nbCaseY = Math.min(this.getHeight()/this.RectSize, this.map.getNbY());
+		nbCaseX = Math.min(this.getWidth()/this.RectSize,this.mapNbX);
+		nbCaseY = Math.min(this.getHeight()/this.RectSize, this.mapNbY);
 		
 		Istart = this.xStart;
 		Jstart = this.yStart;
-		if(nbCaseX == this.map.getNbX()){
+		if(nbCaseX == this.mapNbX){
 			Istart = 0;
 		}
-		if(nbCaseY == this.map.getNbY()){
+		if(nbCaseY == this.mapNbY){
 			Jstart = 0;
 		}
 	}
@@ -103,10 +104,10 @@ public class GraphicMap extends JPanel{
 			x = i*this.RectSize + margeX;
 			for(j = 0; j < nbCaseY ; ++j){
 				y = j*this.RectSize + margeY;
-				if(i < this.map.getNbX() - this.Istart && j < this.map.getNbY() - this.Jstart){
-					g.setColor(getColor(this.map.getCases()[i + Istart][j + Jstart].getBiome()));
+				if(i < this.mapNbX - this.Istart && j < this.mapNbY - this.Jstart){
+					g.setColor(getColor(this.caseMap[i + Istart][j + Jstart].getBiome()));
 					g.fillRect(x, y, this.RectSize, this.RectSize);
-					for(Objet o : this.map.getCases()[i + Istart][j + Jstart].getObjetsPresents()){
+					for(Objet o : this.caseMap[i + Istart][j + Jstart].getObjetsPresents()){
 						img = this.getImageObjet(o);
 						if(img != null && this.RectSize >= 40){
 							g.drawImage(img, x, y, this.RectSize, this.RectSize, null);
@@ -204,9 +205,6 @@ public class GraphicMap extends JPanel{
 	public int getNbCaseY() {
 		return nbCaseY;
 	}
-	public Map getMap(){
-		return this.map;
-	}
 	public int getyStart() {
 		return yStart;
 	}
@@ -241,5 +239,20 @@ public class GraphicMap extends JPanel{
 		else{
 			this.yStart = 0;
 		}
+	}
+	
+	public Case [][] getCaseMap() {
+		return caseMap;
+	}
+	public void setCaseMap(Map m) {
+		this.caseMap = m.getCopieCases();
+		this.mapNbX = m.getNbX();
+		this.mapNbY = m.getNbY();
+	}
+	public int getMapNbX() {
+		return mapNbX;
+	}
+	public int getMapNbY() {
+		return mapNbY;
 	}
 }

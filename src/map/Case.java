@@ -14,7 +14,13 @@
 
 package map;
 
+import objets.Antilope;
+import objets.Eau;
+import objets.Lion;
+import objets.Nourriture;
 import objets.Objet;
+import objets.Rocher;
+
 import java.util.ArrayList;
 
 // Case represente une case de la Map
@@ -36,6 +42,28 @@ public class Case
 	{
 		this.biome = biome;
 		this.objetsPresents = new ArrayList<Objet>();
+	}
+	public Case(Case c){
+		this.biome = c.getBiome();
+		this.nbObjet = c.getNbObjet();
+		this.objetsPresents = new ArrayList<Objet>();
+		for(Objet o : c.getObjetsPresents()){
+			if(o instanceof Antilope){
+				this.objetsPresents.add(new Antilope((Antilope)o));
+			}
+			else if(o instanceof Eau){
+				this.objetsPresents.add(new Eau((Eau)o));
+			}
+			else if(o instanceof Lion){
+				this.objetsPresents.add(new Lion((Lion)o));
+			}
+			else if(o instanceof Nourriture){
+				this.objetsPresents.add(new Nourriture((Nourriture)o));
+			}
+			else if(o instanceof Rocher){
+				this.objetsPresents.add(new Rocher((Rocher)o));
+			}
+		}
 	}
 	
 	//---------- Getters ----------

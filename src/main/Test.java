@@ -1,10 +1,6 @@
 package main;
 
-import java.util.*;
-
 import IHM.Fenetre;
-import map.Map;
-import objets.*;
 
 
 public class Test 

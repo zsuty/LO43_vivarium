@@ -20,6 +20,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
@@ -50,7 +53,6 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 	private Thread t;
 	private Scheduler s;
 	private Map m;
-	private ArrayList<Action> actionList;
 	private boolean animated = true;
 	
 	/* option de lecture (zoom deplacement carte play pause etc...)*/
@@ -81,6 +83,15 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 	private JPanel buttonPanel;
 	private JPanel contentPanel;
 	
+	/* ------- Menu -------- */
+	
+	private JMenuBar menu;
+	private JMenu fichier;
+	private JMenuItem nouveau;
+	private JMenuItem charger;
+	private JMenuItem sauvegarder;
+	
+	
 	public Fenetre (){
 		super();
 		
@@ -89,8 +100,6 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		this.setSize(800,600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		this.actionList = new ArrayList<Action>();
 		m = new Map(50,50);
 		
 		this.gMap = new GraphicMap(m);
@@ -168,6 +177,27 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		contentPanel.add(buttonPanel);
 		this.setContentPane(contentPanel);
 		
+		/* ------ Menu ------ */
+			
+		this.nouveau = new JMenuItem("nouvelle partie");
+		this.charger = new JMenuItem("charger");
+		this.sauvegarder = new JMenuItem("sauvegarder");
+		
+		this.nouveau.addActionListener(this);
+		this.charger.addActionListener(this);
+		this.sauvegarder.addActionListener(this);
+		
+		this.fichier = new JMenu("Fichier");
+		
+		this.fichier.add(this.nouveau);
+		this.fichier.add(this.charger);
+		this.fichier.add(this.sauvegarder);
+		
+		this.menu= new JMenuBar();
+		this.menu.add(this.fichier);
+		this.setJMenuBar(this.menu);
+		/* -------------------*/
+		
 		t = new Thread(new Animation());
 		s = new Scheduler(m);
 		t.start();
@@ -178,8 +208,9 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 	
 	private void go(){
 		while(this.animated){
-			this.m.upDate(this.actionList);
-			this.actionList.removeAll(this.actionList);
+			synchronized (this.m) {
+				this.gMap.setCaseMap(this.m);
+			}
 			this.gMap.setVariable();
 			this.gMap.repaint();
 			try {
@@ -202,6 +233,18 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		}
 		else if(arg0.getSource() == zoomMoins){
 			this.gMap.zoomMoins();
+		}
+		else if(arg0.getSource() == this.nouveau){
+			this.m = new Map(50,50);
+			this.s.setMap(this.m);
+			this.gMap.setCaseMap(m);
+			
+		}
+		else if(arg0.getSource() == this.sauvegarder){
+			// TODO
+		}
+		else if(arg0.getSource() == this.charger){
+			// TODO
 		}
 	}
 	
@@ -250,40 +293,40 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		switch (this.ajoutOption.getChoix()) {
 		case AJOUT_OBJET:
 			if(ajoutOption.getObjet().equals("Lion")){
-				action = new Ajouter(this.gMap.getMap(), new Lion(p));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Lion(p));
+				this.s.addToActionList(action);
 				
 			}
 			else if(ajoutOption.getObjet().equals("Antilope")){
-				action = new Ajouter(this.gMap.getMap(), new Antilope(p));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Antilope(p));
+				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Eau")){
-				action = new Ajouter(this.gMap.getMap(), new Eau(true,p));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Eau(true,p));
+				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Rocher")){
-				action = new Ajouter(this.gMap.getMap(), new Rocher(p));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Rocher(p));
+				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Herbe")){
-				action = new Ajouter(this.gMap.getMap(), new Nourriture(p, false, 10, 20));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Nourriture(p, false, 10, 20));
+				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Viande")){
-				action = new Ajouter(this.gMap.getMap(), new Nourriture(p, true, 10, 20));
-				this.actionList.add(action);
+				action = new Ajouter(this.m, new Nourriture(p, true, 10, 20));
+				this.s.addToActionList(action);
 			}
 			
 			break;
 		
 		case MODIFICATION_BIOME:
-			action = new ModifierBiome(this.gMap.getMap(),this.ajoutOption.getBiome(),p);
-			this.actionList.add(action);
+			action = new ModifierBiome(this.m,this.ajoutOption.getBiome(),p);
+			this.s.addToActionList(action);
 			break;
 		case SUPRESSION:
-			action = new Suprimer(this.gMap.getMap(),p);
-			this.actionList.add(action);
+			action = new Suprimer(this.m,p);
+			this.s.addToActionList(action);
 			break;
 		default:
 			break;
