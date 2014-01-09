@@ -176,15 +176,17 @@ public class Map
 	
 	/* retourne la position de la prochaine case vers laquelle il faut se d�placer pour aller de la position 
 	posDep vers la position posArr en empruntant le plus court chemin (calcul� avec l'algorithme A*) */
-	public ArrayList<Position> getDirection(Animal animal, Position pObjectif, int nbPas)
+	public ArrayList<Position> getDirection(Animal animal, Position pObjectif, int nbPas, boolean acote)
 	{
 		Position pDepart = animal.getPos();
 		Hashtable<Position, Noeud> listeOuverte = new Hashtable<Position, Noeud>();
 		Hashtable<Position, Noeud> listeFermee = new Hashtable<Position, Noeud>();
 		Noeud nCourant = new Noeud();
+		ArrayList<Position> chemin = null;
+		 ArrayList<Position> direction = new ArrayList<Position>();
 		if (pDepart.getX() == pObjectif.getX() && pDepart.getY() == pObjectif.getY())
 		{
-			return null;
+			return direction;
 		}
 		else
 		{
@@ -195,49 +197,42 @@ public class Map
 			
 			/* ajout de courant dans la liste ouverte */
 			listeOuverte.put(pCourant, nCourant);
-		    ajouterListeFermee(listeOuverte, listeFermee, pCourant);
-		    etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
 		 
 		    /* tant que la destination n'a pas ete atteinte et qu'il reste des noeuds a explorer dans la liste ouverte */
-		    while (!(pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY()) && (!listeOuverte.isEmpty()))
-		    {
-		        /* on cherche le meilleur noeud de la liste ouverte (elle n'est pas vide donc il existe) */
-		        pCourant = meilleurNoeud(listeOuverte);
-		        
-		        /* on le passe dans la liste fermee, il ne peut pas d�j� y �tre */
+		    do
+		    {   
+		        /* on le passe dans la liste fermee, il ne peut pas deja y etre */
 		        ajouterListeFermee(listeOuverte, listeFermee, pCourant);
-		 
+		        
 		        /* on recommence la recherche des noeuds adjacents */
 		        etudierCasesAdjacentes(pCourant, pObjectif, listeOuverte, listeFermee);
+		        
+		        /* on cherche le meilleur noeud de la liste ouverte (elle n'est pas vide donc il existe) */
+		        pCourant = meilleurNoeud(listeOuverte);
+		    }
+		    while ((pCourant.getX() != pObjectif.getX() || pCourant.getY() != pObjectif.getY()));
+		    
+		    if (acote || getCaseAt(pCourant).getObjetNonFranchissable() != null)
+		    {
+		    	chemin = retrouverChemin(listeFermee, pDepart, listeOuverte.get(pCourant).getParent());
+		    }
+		    else
+		    {
+		        ajouterListeFermee(listeOuverte, listeFermee, pCourant);
+		        chemin = retrouverChemin(listeFermee, pDepart, pObjectif);
 		    }
 		    
-	        ArrayList<Position> direction = new ArrayList<Position>();
-	        
-		    /* si la destination est atteinte, on remonte le chemin */
-		    if (pCourant.getX() == pObjectif.getX() && pCourant.getY() == pObjectif.getY())
-		    {
-		    	
-		        ArrayList<Position> chemin = retrouverChemin(listeFermee, pDepart, pObjectif);
-		        if (!chemin.isEmpty())
-		        {
-		        	for (int i = 0; i < nbPas && chemin.size()-1-i >= 0; i++)
-		        	{
-		        		Position p = chemin.get(chemin.size()-1-i);
-				        direction.add(p);
-				        if (p.getX() == pObjectif.getX() && p.getY() == pObjectif.getY())
-				        {
-				        	i = nbPas; // on sort de la boucle
-				        }
-		        	}
-		        }
-		    }
+        	for (int i = 1; i <= nbPas && i < chemin.size(); i++)
+        	{
+		        direction.add(chemin.get(i));
+        	}
 		    return direction;
 		}
 	}
 	
 	//---------- M�thodes priv�es ----------
 	
-	/* retourne la distance euclidienne entre 2 positions
+	/* retourne le carre de la distance euclidienne entre 2 positions
 	utilise dans getDirection */
 	private double distance(Position p1, Position p2)
 	{
@@ -249,25 +244,26 @@ public class Map
 	}
 	
 	private void etudierCasesAdjacentes(Position p, Position pDest, Hashtable<Position, Noeud> listeOuverte, Hashtable<Position, Noeud> listeFermee)
-	{
-		Noeud temp = new Noeud();
-		
+	{	
 		 for (int i = p.getX()-1; i <= p.getX()+1; i++)
 		 {
-		        if ((i >= 0) && (i < nbX))  
+		        if ((i >= 0) && (i < nbX))
 		        	// si la coordonn�e appartient bien � la map
 		        {
 		        	for (int j = p.getY()-1; j <= p.getY()+1; j++)
 		        	{
+		        		Noeud temp = new Noeud();
 			            if ((j >= 0) && (j < nbY))   
 			            	// si la coordonn�e appartient bien � la map
 			            {
-			            	if (!((i == p.getX()) && (j == p.getY())))  // si ce n'est pas la case courante
+			            	if ((i != p.getX()) || (j != p.getY()))  // si ce n'est pas la case courante
 			            	{
+			            		//System.out.println("- etudie case : " + i + ", " + j);
 			            		Position posTemp = new Position(i,j);
-			            		if (getCaseAt(posTemp).getObjetNonFranchissable() == null) 
-			            			// si la case est franchissable
+			            		if (getCaseAt(posTemp).getObjetNonFranchissable() == null || (posTemp.getX() == pDest.getX() && posTemp.getY() == pDest.getY())) 
+			            			// si la case est franchissable ou que c'est la destination
 				                {        
+			            			//System.out.println("case " + i + ", " + j + " franchissable");
 			            			 if (!dejaDansListe(posTemp, listeFermee))
 			            				 // si le noeud n'est pas deja present dans la liste fermee
 			            			 {
@@ -287,7 +283,6 @@ public class Map
 			            	             if (dejaDansListe(posTemp, listeOuverte))
 			            	            	 // si le noeud est deja dans la liste ouverte 
 			            	             {
-			            	            	 	
 			            	            	 	Noeud noeud = listeOuverte.get(posTemp);
 			            	                    if (temp.getCoutF() < noeud.getCoutF())
 			            	                    	// si le nouveau chemin est meilleur
@@ -297,7 +292,7 @@ public class Map
 			            	             }
 			            	             else
 			            	            	 // si le noeud n'est pas encore present dans la liste ouverte
-			            	             {
+			            	             {			            	            	 
 			            	            	 listeOuverte.put(posTemp, temp);
 			            	             }
 			            			 }
@@ -328,30 +323,26 @@ public class Map
 			}
 		}
 	}
-	/* retourne la Position du meilleur Noeud de la liste pass�e en param�tres */
+	/* retourne la Position du meilleur Noeud de la liste passee en parametres */
 	private Position meilleurNoeud(Hashtable<Position, Noeud> liste)
 	{
-	    Enumeration<Noeud> noeuds = liste.elements();
 	    Enumeration<Position> positions = liste.keys();
-	    if (noeuds.hasMoreElements() && positions.hasMoreElements())
+	    if (positions.hasMoreElements())
 	    {
-	    	double meilleurCoutF = noeuds.nextElement().getCoutF();
 	    	Position meilleurePos = positions.nextElement();
-	    	
-	    	while(noeuds.hasMoreElements() && positions.hasMoreElements())
+	    	while(positions.hasMoreElements())
 		    {
-	    		double coutF = noeuds.nextElement().getCoutF();
+	    		double meilleurCoutF = liste.get(meilleurePos).getCoutF();
 	    		Position pos = positions.nextElement();
+	    		double coutF = liste.get(pos).getCoutF();
+		    	
 		        if (coutF < meilleurCoutF)
 		        {
-		            meilleurCoutF = coutF;
 		            meilleurePos = pos;
 		        }
 		    }
-	    	
 	    	return meilleurePos;
 	    }
-	    
 	    return null;
 	}
 	
@@ -361,26 +352,29 @@ public class Map
 	    Noeud n = listeOuverte.get(pos);
 	    listeFermee.put(pos, n);
 	    listeOuverte.remove(pos);
-	    return;
 	}
 	
 	ArrayList<Position> retrouverChemin(Hashtable<Position, Noeud> listeFermee, Position posDepart, Position posArrivee)
 	{
 	    /* l'arrivee est le dernier element de la liste fermee */
-	    Noeud temp = listeFermee.get(posArrivee);
 	    ArrayList<Position> chemin = new ArrayList<Position>();
-	 
+	    
 	    Position posCourante = posArrivee;
-	    Position posPrecedente = temp.getParent();
-	    chemin.add(posCourante);
+	    Noeud noeudCourant = listeFermee.get(posCourante);
+	    if (noeudCourant == null)
+	    {
+	    	System.out.println("null");
+	    }
+	    Position posPrecedente = noeudCourant.getParent();
+	    chemin.add(0, posCourante);
 	 
-	    while (!(posPrecedente.getX() == posDepart.getX() && posPrecedente.getY() == posDepart.getY()))
+	    while ((posCourante.getX() != posDepart.getX()) || (posCourante.getY() != posDepart.getY()))
 	    {
 	    	posCourante = posPrecedente;
-	    	chemin.add(posCourante);
+	    	chemin.add(0, posCourante);
 	 
-	        temp = listeFermee.get(temp.getParent());
-	        posPrecedente = temp.getParent();
+	    	noeudCourant = listeFermee.get(posCourante);
+	        posPrecedente = noeudCourant.getParent();
 	    }
 	    return chemin;
 	}
