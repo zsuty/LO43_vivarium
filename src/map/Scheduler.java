@@ -26,8 +26,7 @@ public class Scheduler extends Thread{
 					if(o instanceof Animal){
 						ArrayList <Deplacer> d = new ArrayList<Deplacer>();
 						System.out.println("2");
-						System.out.println(this.map.getDirection((Animal)o , new Position(5,5), 1));
-						for(Position p : this.map.getDirection((Animal)o , new Position(5,5), 1)){
+						for(Position p : this.map.getDirection((Animal)o , new Position(5,5), 1,true)){
 							System.out.println("3");
 							d.add(new Deplacer(this.map, (Animal) o, p));
 						}

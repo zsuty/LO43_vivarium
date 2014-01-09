@@ -85,4 +85,25 @@ public class Noeud
 	{
 		this.parent = parent;
 	}
+	
+	@Override
+	public boolean equals(Object obj) 
+	{
+	    if (!(obj instanceof Noeud)) 
+	    {
+	        return false;
+	    } 
+	    else 
+	    {
+	        Noeud that = (Noeud)obj;
+	        return ((this.coutF == that.coutF) && (this.coutG == that.coutG)  && (this.coutH == that.coutH) && this.parent.equals(that.parent));
+	    }
+	}
+
+	@Override
+	public int hashCode() 
+	{
+	    int hash = Double.valueOf(this.coutF).hashCode() + Double.valueOf(this.coutG).hashCode() + Double.valueOf(this.coutH).hashCode() + this.parent.hashCode();
+	    return hash;
+	}
 }

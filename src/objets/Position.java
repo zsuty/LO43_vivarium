@@ -63,6 +63,7 @@ public class Position
 	
 	//---------- Methodes pour l'utilisation comme clef dans Hashtable ----------
 	
+	@Override
 	public boolean equals(Object obj) 
 	{
 	    if (!(obj instanceof Position)) 
@@ -76,6 +77,7 @@ public class Position
 	    }
 	}
 
+	@Override
 	public int hashCode() 
 	{
 	    int hash = this.x + this.y;
