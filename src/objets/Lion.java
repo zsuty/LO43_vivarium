@@ -19,6 +19,9 @@ public class Lion extends Animal{
 		this.pos = p;
 		this.franchissable = false;
 		agressif= false;
+		this.vitesse = 3;
+		this.attaque = 10;
+		this.defense = 5;
 	}
 	public Lion(Lion l){
 		super((Animal)l);

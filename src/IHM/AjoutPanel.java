@@ -44,7 +44,7 @@ public class AjoutPanel extends JPanel{
 		biome.addItem("Plaine");
 		biome.addItem("Montagne");
 		biome.addItem("Ocean");
-		biome.addItem("Foret");
+		biome.addItem("Fertile");
 		
 		this.setLayout(new GridLayout(3, 2));
 		this.add(ajoutObjet);
@@ -88,7 +88,7 @@ public class AjoutPanel extends JPanel{
 		else if(biome.getSelectedItem().equals("Ocean")){
 			return Biome.OCEAN;
 		}
-		else if(biome.getSelectedItem().equals("Foret")){
+		else if(biome.getSelectedItem().equals("Fertile")){
 			return Biome.FORET;
 		}
 		return Biome.PLAINE;
