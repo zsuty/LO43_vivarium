@@ -159,7 +159,7 @@ public class Map
 		{
 			for(j = -animal.getVisionRange();j <= animal.getVisionRange() ; ++j)
 			{
-				if((Math.abs(i) + Math.abs(j)) <= animal.getVisionRange())
+				if(Math.max(Math.abs(i),  Math.abs(j)) <= animal.getVisionRange())
 				{
 					positionX = i + animal.getPos().getX();
 					positionY = j + animal.getPos().getY();
