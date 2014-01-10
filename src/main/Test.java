@@ -1,9 +1,5 @@
 package main;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4e9f330e1838c106a9b2bf2e337ed737eb86aad2
 import IHM.Fenetre;
 
 
