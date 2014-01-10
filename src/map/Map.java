@@ -388,31 +388,33 @@ public class Map
 
 	public boolean Deplacer(Animal animal, Position position){
 		if((position.getX() >= 0 && position.getX() < this.nbX) && (position.getY() >= 0 && position.getY() < this.nbY)){
-			Objet tempObjet = this.cases [position.getX()][position.getY()].getObjetNonFranchissable();
-			boolean gagnant = true;
-			if(tempObjet != null){
-				if(tempObjet instanceof Lion){
-					if(animal instanceof Antilope){
-						gagnant = conflit(animal, (Animal)tempObjet);
+			if(Math.abs(position.getX() - animal.getPos().getX()) <= 1 &&  Math.abs(position.getY() - animal.getPos().getY()) <= 1){
+				Objet tempObjet = this.cases [position.getX()][position.getY()].getObjetNonFranchissable();
+				boolean gagnant = true;
+				if(tempObjet != null){
+					if(tempObjet instanceof Lion){
+						if(animal instanceof Antilope){
+							gagnant = conflit(animal, (Animal)tempObjet);
+						}
+						else if(animal instanceof Lion ){
+							if(((Lion) tempObjet).isAgressif() || ((Lion)animal).isAgressif()){
+								gagnant = conflit(animal, (Animal)tempObjet);
+							}
+						}
 					}
-					else if(animal instanceof Lion ){
-						if(((Lion) tempObjet).isAgressif() || ((Lion)animal).isAgressif()){
+					else if(tempObjet instanceof Antilope){
+						if(animal instanceof Lion){
 							gagnant = conflit(animal, (Animal)tempObjet);
 						}
 					}
 				}
-				else if(tempObjet instanceof Antilope){
-					if(animal instanceof Lion){
-						gagnant = conflit(animal, (Animal)tempObjet);
-					}
-				}
-			}
-			if(gagnant){
-				if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
+				if(gagnant){
+					if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
 				
-					if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
-						animal.setPos(new Position(position.getX(), position.getY()));
-						return true;
+						if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
+							animal.setPos(new Position(position.getX(), position.getY()));
+							return true;
+						}
 					}
 				}
 			}
