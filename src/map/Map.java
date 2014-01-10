@@ -224,7 +224,7 @@ public class Map
 		    }
 		    while ((pCourant.getX() != pObjectif.getX() || pCourant.getY() != pObjectif.getY()));
 		    
-		    if (acote || getCaseAt(pCourant).getObjetNonFranchissable() != null)
+		    if (acote)
 		    {
 		    	chemin = retrouverChemin(listeFermee, pDepart, listeOuverte.get(pCourant).getParent());
 		    }
