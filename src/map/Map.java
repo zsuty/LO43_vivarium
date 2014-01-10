@@ -152,7 +152,7 @@ public class Map
 	
 	public ArrayList<Objet> getVision(Animal animal)
 	{
-		int i,j,k,positionX,positionY;
+		int i,j,positionX,positionY;
 		Case tempCase;
 		ArrayList<Objet> objetVisible = new ArrayList <Objet>();
 		for(i = -animal.getVisionRange();i <= animal.getVisionRange() ; ++i)
@@ -169,12 +169,9 @@ public class Map
 						tempCase = this.cases[positionX][positionY];
 						if(tempCase.getNbObjet() != 0)
 						{
-							for(k = 0; k < tempCase.getNbObjet() ; ++k)
-							{
-								if(tempCase.getObjetsPresents().get(k) != animal)
-								{
-									objetVisible.add(tempCase.getObjetsPresents().get(k));
-							
+							for(Objet o : tempCase.getObjetsPresents()){
+								if(o != animal){
+									objetVisible.add(o);
 								}
 							}
 						}
@@ -318,27 +315,7 @@ public class Map
 		       }
 		 }
 	}
-	public boolean Deplacer(Animal animal, Position position){
-		if((position.getX() >= 0 && position.getX() < this.nbX) && (position.getY() >= 0 && position.getY() < this.nbY)){
-			
-			if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
-				if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
-					animal.setPos(new Position(position.getX(), position.getY()));
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	
-	public synchronized void upDate(ArrayList <Action> actionList){
-		String s = new String();
-		for(Action action : actionList){
-			if(!action.action(s)){
-				System.out.println(s);
-			}
-		}
-	}
 	/* retourne la Position du meilleur Noeud de la liste passee en parametres */
 	private Position meilleurNoeud(Hashtable<Position, Noeud> liste)
 	{
@@ -407,5 +384,85 @@ public class Map
 	    	}
 	    }
 	    return false;
+	}
+
+	public boolean Deplacer(Animal animal, Position position){
+		if((position.getX() >= 0 && position.getX() < this.nbX) && (position.getY() >= 0 && position.getY() < this.nbY)){
+			Objet tempObjet = this.cases [position.getX()][position.getY()].getObjetNonFranchissable();
+			boolean gagnant = true;
+			if(tempObjet != null){
+				if(tempObjet instanceof Lion){
+					if(animal instanceof Antilope){
+						gagnant = conflit(animal, (Animal)tempObjet);
+					}
+					else if(animal instanceof Lion ){
+						if(((Lion) tempObjet).isAgressif() || ((Lion)animal).isAgressif()){
+							gagnant = conflit(animal, (Animal)tempObjet);
+						}
+					}
+				}
+				else if(tempObjet instanceof Antilope){
+					if(animal instanceof Lion){
+						gagnant = conflit(animal, (Animal)tempObjet);
+					}
+				}
+			}
+			if(gagnant){
+				if(this.cases [position.getX()][position.getY()].ajouterObjet(animal)){
+				
+					if(this.cases[animal.getPos().getX()][animal.getPos().getY()].suprimerObjet(animal)){
+						animal.setPos(new Position(position.getX(), position.getY()));
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private boolean conflit(Animal a1, Animal a2){
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("COMBAT");
+		System.out.println();System.out.println();
+		Random rand = new Random();
+		int attaque1 = a1.getAttaque() * rand.nextInt(10);
+		int defense1 = a1.getDefense() * rand.nextInt(10);
+		int attaque2 = a2.getAttaque() * rand.nextInt(10);
+		int defense2 = a2.getDefense() * rand.nextInt(10);
+		int degat1;
+		int degat2;
+		if(defense2 < attaque1){
+			degat1 = attaque1 - defense2;
+		}
+		else {
+			degat1 = 0;
+		}
+		if(defense1 < attaque2){
+			degat2 = attaque2 - defense1;
+		}
+		else{
+			degat2 = 0;
+		}
+		
+		if(a2.perdreVie(degat1, this)){
+			if(a1.perdreVie(degat2, this)){
+				if(degat1 > degat2){
+					while(this.Deplacer(a2, new Position(a2.getPos().getX() + (rand.nextInt(2) - 1),a2.getPos().getY() + (rand.nextInt(2) - 1)))){}
+					return true;
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	public synchronized void upDate(ArrayList <Action> actionList){
+		String s = new String();
+		for(Action action : actionList){
+			if(!action.action(s)){
+				System.out.println(s);
+			}
+		}
 	}
 }

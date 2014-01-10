@@ -13,6 +13,7 @@ public class Scheduler extends Thread{
 	private Map map;
 	private ArrayList<Action> actionList;
 	private int count = 0;
+	private boolean pause = false;
 	public Scheduler(Map m){
 		super();
 		actionList = new ArrayList<Action>();
@@ -21,16 +22,15 @@ public class Scheduler extends Thread{
 	
 	public void run(){
 		while(true){
-			if(this.count == 0){
+			if(this.count == 0 && !pause){
+				
 				for(Objet o : this.map.getObjets()){
 					if(o instanceof Animal){
-						ArrayList <Deplacer> d = new ArrayList<Deplacer>();
-						System.out.println("2");
-						for(Position p : this.map.getDirection((Animal)o , new Position(5,5), 1,true)){
-							System.out.println("3");
-							d.add(new Deplacer(this.map, (Animal) o, p));
+						ArrayList <Action> a = new ArrayList<Action>();
+						a = ((Animal) o).decider(this.map);
+						if(a != null){
+							actionList.addAll(a);
 						}
-						actionList.addAll(d);
 					}
 				}
 			}
@@ -50,6 +50,11 @@ public class Scheduler extends Thread{
 	public void addToActionList (Action a){
 		this.actionList.add(a);
 	}
-	
+	public void setPause(boolean pause) {
+		this.pause = pause;
+	}
+	public boolean isPause() {
+		return pause;
+	}
 	
 }

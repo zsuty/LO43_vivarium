@@ -100,7 +100,7 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		this.setSize(800,600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		m = new Map(50,50);
+		m = new Map(20,20);
 		
 		this.gMap = new GraphicMap(m);
 		gMap.addMouseListener(this);
@@ -128,7 +128,7 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 			e.printStackTrace();
 			play = new JButton();
 		}
-		
+		play.addActionListener(this);
 		dp = new DeplacementPanel(this.gMap);
 		dp.setBackground(new Color(101,77,48));
 		dp.setPreferredSize(new Dimension(150,150));
@@ -234,8 +234,12 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 		else if(arg0.getSource() == zoomMoins){
 			this.gMap.zoomMoins();
 		}
+		else if(arg0.getSource() == this.play){
+			System.out.println("__________________________________________________________");
+			this.s.setPause(!this.s.isPause());
+		}
 		else if(arg0.getSource() == this.nouveau){
-			this.m = new Map(50,50);
+			this.m = new Map(20,20);
 			this.s.setMap(this.m);
 			this.gMap.setCaseMap(m);
 			
@@ -310,7 +314,7 @@ public class Fenetre extends JFrame implements ActionListener, MouseListener{
 				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Herbe")){
-				action = new Ajouter(this.m, new Nourriture(p, false, 10, 20));
+				action = new Ajouter(this.m, new Nourriture(p, false, 100, 20));
 				this.s.addToActionList(action);
 			}
 			else if(ajoutOption.getObjet().equals("Viande")){
